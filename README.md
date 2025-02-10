@@ -2,6 +2,8 @@
 
 This is our free open source youtube service project on github
 
+## Local Setup
+
 - Step 1: Check Python version
     ```python3.12 --version```
 
@@ -12,3 +14,7 @@ This is our free open source youtube service project on github
     - Linux/Mac: ```source youtube_subscription/bin/activate```
 
     - Windows (cmd): ```youtube_subscription\Scripts\activate```
+
+## High Level Design/Architecture
+
+![](./assets/High_level_system_design_flow.png)
