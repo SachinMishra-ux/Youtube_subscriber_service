@@ -24,7 +24,7 @@ def authenticate():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                '/Users/sachinmishra/Desktop/Youtube_subscriber_service/experiments/credentials.json', SCOPES)
+                '/Users/sachinmishra/Desktop/Youtube_subscriber_service/experiments/client_secret_579769589379-8f76ss5g4vnqadao4tohmje7ejfso66k.apps.googleusercontent.com.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:

@@ -1,16 +1,18 @@
 from googleapiclient.discovery import build
 from authenticate import authenticate  # Assuming you have a separate file for authentication
-import mysql.connector
+from pymongo import MongoClient
 from datetime import datetime, timedelta
 
+MONGO_URI= "mongodb+srv://locdataquery:2rrq2k5AFtHESMju@cluster0.wsb6s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_DB= 'youtubedata'
+MONGO_COLLECTION= 'youtube_collection'
 # Function to connect to the MySQL database
-def connect_to_database():
-    return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='Root@#123$',
-        database='youtubedata'
-    )
+def conn_to_mongodb():
+    client = MongoClient(MONGO_URI)
+    db = client[MONGO_DB]
+    collection = db[MONGO_COLLECTION]
+    return client,collection
+
 
 
 def get_channel_subscribers(channel_id):
@@ -126,7 +128,10 @@ def insert_video_data(subscriber_id,video_id, title, published_at, duration):
 
 
 if __name__ == '__main__':
-    channel_id= input("Enter channel ID:")
+    client, _= collection = conn_to_mongodb()
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+    """channel_id= input("Enter channel ID:")
     subscribers = get_channel_subscribers(channel_id)
     print("Subscribers:", subscribers)
 
@@ -138,4 +143,4 @@ if __name__ == '__main__':
         for video in videos:
             insert_video_data(subscriber_id, video['video_id'],video['title'],video['published_at'],video['duration'])
             print('data inserted')
-            #print(f"Video ID: {video['video_id']}, Title: {video['title']}, Published At: {video['published_at']}, Video Duration: {video['duration']}")
+            #print(f"Video ID: {video['video_id']}, Title: {video['title']}, Published At: {video['published_at']}, Video Duration: {video['duration']}")"""
