@@ -1,15 +1,15 @@
 from googleapiclient.discovery import build
 from authenticate import authenticate  # Assuming you have a separate file for authentication
-from pymongo import MongoClient, errors
+from pymongo import MongoClient
 from datetime import datetime, timedelta, timezone
+from logger_factory import get_logger
+import os
+from dotenv import load_dotenv
 
+logger = get_logger(__name__)
 
-
-def get_channel_subscriptions(channel_id):
+def get_channel_subscriptions(youtube, channel_id):
     try:
-        # Authenticate with the YouTube Data API
-        youtube = build('youtube', 'v3', credentials=authenticate())
-
         # Retrieve the subscribers of the specified channel
         subscribers = []
         next_page_token = None
@@ -34,13 +34,12 @@ def get_channel_subscriptions(channel_id):
 
         return subscribers
     except Exception as e:
-        print(f"An error occurred while fetching channel subscriptions: {e}")
+        logger.error(f"An error occurred while fetching channel subscriptions: {e}")
         return []
 
-def get_video_duration(video_id):
+def get_video_duration(youtube, video_id):
     try:
-        youtube = build('youtube', 'v3', credentials=authenticate())
-        
+        # Retrieve the video details
         request = youtube.videos().list(
             part='contentDetails',
             id=video_id
@@ -52,14 +51,11 @@ def get_video_duration(video_id):
         
         return duration
     except Exception as e:
-        print(f"An error occurred while fetching video duration: {e}")
+        logger.error(f"An error occurred while fetching video duration: {e}")
         return None
 
-def get_channel_videos(channel_id):
+def get_channel_videos(youtube, channel_id):
     try:
-        # Authenticate with the YouTube Data API
-        youtube = build('youtube', 'v3', credentials=authenticate())
-
         # Calculate the date range for today
         today = datetime.now(timezone.utc).date()
         tomorrow = today + timedelta(days=1)
@@ -89,7 +85,7 @@ def get_channel_videos(channel_id):
                 video_published_at = item['snippet']['publishedAt']
                 
                 # Fetch video duration
-                video_duration = get_video_duration(video_id)
+                video_duration = get_video_duration(youtube, video_id)
                 if video_duration:
                     videos.append({
                         'video_id': video_id,
@@ -105,7 +101,7 @@ def get_channel_videos(channel_id):
 
         return videos
     except Exception as e:
-        print(f"An error occurred while fetching channel videos: {e}")
+        logger.error(f"An error occurred while fetching channel videos: {e}")
         return []
 
 # Function to connect to the Mongo database
@@ -115,16 +111,13 @@ def conn_to_mongodb():
         db = client[MONGO_DB]
         collection = db[MONGO_COLLECTION]
         return client, collection
-    except errors.ConnectionError as e:
-        print(f"An error occurred while connecting to MongoDB: {e}")
-        return None, None
+    except Exception as e:
+        logger.error(f"An error occurred while connecting to MongoDB: {e}")
+        return None
 
 def insert_video_data(channel_id, video_id, title, published_at, duration):
-    client, collection = conn_to_mongodb()
-    if not client or not collection:
-        return
-
     try:
+        client, collection = conn_to_mongodb()
         # Convert published_at to the correct datetime format
         datetime_obj = datetime.strptime(published_at, '%Y-%m-%dT%H:%M:%SZ')
         formatted_published_at = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
@@ -140,24 +133,39 @@ def insert_video_data(channel_id, video_id, title, published_at, duration):
 
         # Insert the document into the collection
         collection.insert_one(document)
-        print('Data inserted successfully')
+        logger.info('Data inserted successfully')
     except Exception as e:
-        print(f"An error occurred while inserting video data: {e}")
+        logger.error(f"An error occurred while inserting video data: {e}")
     finally:
         client.close()
 
 if __name__ == '__main__':
     try:
+        load_dotenv()
+        MONGO_URI = os.getenv('MONGO_URI')
+        MONGO_DB = os.getenv('MONGO_DB')
+        MONGO_COLLECTION = os.getenv('MONGO_COLLECTION')
+
+
+        # Authenticate once and pass the credentials to the functions
+        credentials = authenticate()
+        if not credentials:
+            logger.error("Authentication failed!")
+            exit(1)
+        
+        youtube = build('youtube', 'v3', credentials=credentials)
+
         channel_id = input("Enter channel ID:")
-        subscriptions = get_channel_subscriptions(channel_id)
+        subscriptions = get_channel_subscriptions(youtube,channel_id)
+        
         print("Your Subscriptions:", subscriptions)
         
         # Get the videos uploaded by each subscribed channel
         for channel_id in subscriptions:
-            print(f"Videos uploaded by channel {channel_id}:")
-            videos = get_channel_videos(channel_id)
-            print(videos)
+            logger.info(f"Videos uploaded by channel {channel_id}:")
+            videos = get_channel_videos(youtube, channel_id)
+            logger.info(videos)
             for video in videos:
                 insert_video_data(channel_id, video['video_id'], video['title'], video['published_at'], video['duration'])
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")

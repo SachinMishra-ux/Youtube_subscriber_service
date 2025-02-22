@@ -1,5 +1,5 @@
 from googleapiclient.discovery import build
-from channel_info.authenticate import authenticate  # Assuming you have a separate file for authentication
+from channel_info.scripts.authenticate import authenticate  # Assuming you have a separate file for authentication
 import mysql.connector
 from datetime import datetime, timedelta
 
