@@ -139,3 +139,5 @@ if __name__ == '__main__':
             insert_video_data(subscriber_id, video['video_id'],video['title'],video['published_at'],video['duration'])
             print('data inserted')
             #print(f"Video ID: {video['video_id']}, Title: {video['title']}, Published At: {video['published_at']}, Video Duration: {video['duration']}")
+
+            

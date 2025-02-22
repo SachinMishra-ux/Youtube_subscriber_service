@@ -12,7 +12,8 @@ def main():
 
     api_service_name = "youtube"
     api_version = "v3"
-    client_secrets_file = r"C:\Users\annum\YT_subscriptions\client_secret_336418085349-a4h9dsnocutpmhih4cj8d5kllrl0nrj2.apps.googleusercontent.com.json"  # Ensure this file is in your working directory
+    #client_secrets_file = r"C:\Users\annum\YT_subscriptions\client_secret_336418085349-a4h9dsnocutpmhih4cj8d5kllrl0nrj2.apps.googleusercontent.com.json"  # Ensure this file is in your working directory
+    client_secrets_file= '/Users/sachinmishra/Desktop/Youtube_subscriber_service/src/client_secret_336418085349-a4h9dsnocutpmhih4cj8d5kllrl0nrj2.apps.googleusercontent.com.json'
 
     # Authenticate user and get credentials
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(

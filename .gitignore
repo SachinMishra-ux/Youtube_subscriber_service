@@ -172,6 +172,9 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-experiments/credentials.json
+## json credentials
+experiments/*.json
+token.json
+experiments/token.json
 experiments/client_secret_579769589379-8f76ss5g4vnqadao4tohmje7ejfso66k.apps.googleusercontent.com.json
 
