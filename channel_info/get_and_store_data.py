@@ -3,9 +3,7 @@ from authenticate import authenticate  # Assuming you have a separate file for a
 from pymongo import MongoClient, errors
 from datetime import datetime, timedelta, timezone
 
-MONGO_URI= "mongodb+srv://locdataquery:2rrq2k5AFtHESMju@cluster0.wsb6s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-MONGO_DB= 'youtubedata'
-MONGO_COLLECTION= 'youtube_collection'
+
 
 def get_channel_subscriptions(channel_id):
     try:

@@ -14,6 +14,8 @@ This is our free open source youtube service project on github
     - Linux/Mac: ```source youtube_subscription/bin/activate```
 
     - Windows (cmd): ```youtube_subscription\Scripts\activate```
+- After activating the virtual environment, install the dependencies using the following command:
+  - ```pip install -r requirements.txt```
 
 ## High Level Design/Architecture
 
