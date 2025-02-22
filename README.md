@@ -1,6 +1,9 @@
 # Youtube_subscriber_service
 
 This is our free open source youtube service project on github
+This project consist 2 service:
+1) Getting the subscription list of the user and store the data in MongoDB
+2) Generate summary of the videos for individual subscriptions and send personalized email notification to the user.
 
 ## Local Setup
 
