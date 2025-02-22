@@ -1,5 +1,5 @@
 from googleapiclient.discovery import build
-from authenticate import authenticate  # Assuming you have a separate file for authentication
+from channel_info.scripts.authenticate import authenticate  # Assuming you have a separate file for authentication
 import mysql.connector
 from datetime import datetime, timedelta
 
@@ -11,6 +11,7 @@ def connect_to_database():
         password='Root@#123$',
         database='youtubedata'
     )
+
 
 def get_channel_subscribers(channel_id):
     # Authenticate with the YouTube Data API
@@ -138,3 +139,5 @@ if __name__ == '__main__':
             insert_video_data(subscriber_id, video['video_id'],video['title'],video['published_at'],video['duration'])
             print('data inserted')
             #print(f"Video ID: {video['video_id']}, Title: {video['title']}, Published At: {video['published_at']}, Video Duration: {video['duration']}")
+
+            
