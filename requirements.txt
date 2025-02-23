@@ -3,4 +3,10 @@ google-oauth2-tool==0.0.3
 google-auth-oauthlib==1.2.1
 pymongo==4.11.1
 python-dotenv==1.0.1
+
+#youtube related
 youtube-transcript-api==0.6.3
+yt-dlp==2025.2.19
+
+#aws related
+boto3==1.36.26

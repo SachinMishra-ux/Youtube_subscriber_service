@@ -7,7 +7,7 @@ from get_mongo_data import conn_to_mongodb, get_unique_documents
 
 logger = get_logger(__name__)
 
-def get_video_transcript(video_id):
+def get_video_transcript_using_youtube_transcript(video_id):
     try:
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
         logger.info(f"Retrieved transcript for video ID {video_id}")
@@ -21,7 +21,8 @@ def get_video_transcript(video_id):
     except Exception as e:
         logger.error(f"An error occurred while retrieving transcript for video ID {video_id}: {e}")
         return None
-    
+
+
 
 if __name__ == '__main__':
     try:
@@ -37,7 +38,7 @@ if __name__ == '__main__':
 
             for doc in unique_documents:
                 video_id = doc['video_id']
-                transcript = get_video_transcript(video_id)
+                transcript = get_video_transcript_using_youtube_transcript(video_id)
                 if transcript:
                     logger.info(f"Transcript for video ID {video_id}: {transcript}")
                 else:
